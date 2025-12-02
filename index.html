@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Digital Habitus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            colors: {
+              'void': '#050505',
+              'panel': '#0F0F0F',
+              'neon-blue': '#4F46E5',
+              'acid-green': '#10B981',
+              'warning': '#F59E0B',
+            },
+            animation: {
+              'spin-slow': 'spin 20s linear infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body { background-color: #050505; color: #e5e5e5; }
+      /* Custom scrollbar for raw feel */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: #050505; }
+      ::-webkit-scrollbar-thumb { background: #333; }
+      ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@18.3.1",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@18.3.1/client",
+    "react-dom": "https://aistudiocdn.com/react-dom@18.3.1",
+    "three": "https://aistudiocdn.com/three@0.160.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "@react-three/fiber": "https://aistudiocdn.com/@react-three/fiber@8.15.16",
+    "@react-three/drei": "https://aistudiocdn.com/@react-three/drei@9.99.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@11.0.8",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@0.344.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
