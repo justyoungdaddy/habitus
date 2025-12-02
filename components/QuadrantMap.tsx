@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Quadrant, QuadrantData } from '../types';
-import { Info, Users, TrendingUp, Gem, X, Target, Crosshair } from 'lucide-react';
+import { Info, Users, TrendingUp, Gem, X, Target, Crosshair, Box, Globe } from 'lucide-react';
+import SocialGraph3D from './SocialGraph3D';
+import LiveTicker from './LiveTicker';
 
 // --- DATA ---
 const QUADRANTS: QuadrantData[] = [
@@ -69,6 +71,7 @@ const NODES = [
 const QuadrantMap: React.FC = () => {
   const [selectedQuad, setSelectedQuad] = useState<Quadrant | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'2D' | '3D'>('2D');
 
   const getQuadData = (id: Quadrant) => QUADRANTS.find(q => q.id === id)!;
 
@@ -76,94 +79,120 @@ const QuadrantMap: React.FC = () => {
     <div className="w-full max-w-6xl mx-auto px-4 py-8 h-[80vh] flex flex-col md:flex-row gap-6 relative">
       
       {/* --- MAP VISUALIZATION --- */}
-      <div className="relative flex-1 bg-void/50 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm group select-none">
+      <div className="relative flex-1 bg-void/50 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm group select-none flex flex-col">
         
-        {/* Grid Background */}
-        <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
-            <div 
-                className={`border-r border-b border-white/5 transition-colors duration-500 cursor-pointer ${selectedQuad === 'aristocracy' ? 'bg-emerald-500/5' : 'hover:bg-white/5'}`}
-                onClick={() => setSelectedQuad('aristocracy')}
-            />
-            <div 
-                className={`border-b border-white/5 transition-colors duration-500 cursor-pointer ${selectedQuad === 'technocrats' ? 'bg-neon-blue/5' : 'hover:bg-white/5'}`}
-                onClick={() => setSelectedQuad('technocrats')}
-            />
-            <div 
-                className={`border-r border-white/5 transition-colors duration-500 cursor-pointer ${selectedQuad === 'proletariat' ? 'bg-gray-500/5' : 'hover:bg-white/5'}`}
-                onClick={() => setSelectedQuad('proletariat')}
-            />
-            <div 
-                className={`transition-colors duration-500 cursor-pointer ${selectedQuad === 'merchants' ? 'bg-rose-500/5' : 'hover:bg-white/5'}`}
-                onClick={() => setSelectedQuad('merchants')}
-            />
+        {/* Toggle Controls */}
+        <div className="absolute top-4 right-4 z-30 flex gap-2">
+            <button
+                onClick={() => setViewMode('2D')}
+                className={`p-2 rounded hover:bg-white/10 transition-colors ${viewMode === '2D' ? 'text-white bg-white/10' : 'text-gray-500'}`}
+                title="2D HUD View"
+            >
+                <Box className="w-4 h-4" />
+            </button>
+            <button
+                onClick={() => setViewMode('3D')}
+                className={`p-2 rounded hover:bg-white/10 transition-colors ${viewMode === '3D' ? 'text-white bg-white/10' : 'text-gray-500'}`}
+                title="3D Space View"
+            >
+                <Globe className="w-4 h-4" />
+            </button>
         </div>
 
-        {/* Axes Labels */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">High Volume</div>
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">Low Volume</div>
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-90 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">High Cultural</div>
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">High Economic</div>
+        {viewMode === '3D' ? (
+            <>
+                <SocialGraph3D />
+                <LiveTicker />
+            </>
+        ) : (
+            <div className="relative w-full h-full">
+                {/* Grid Background */}
+                <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
+                    <div
+                        className={`border-r border-b border-white/5 transition-colors duration-500 cursor-pointer ${selectedQuad === 'aristocracy' ? 'bg-emerald-500/5' : 'hover:bg-white/5'}`}
+                        onClick={() => setSelectedQuad('aristocracy')}
+                    />
+                    <div
+                        className={`border-b border-white/5 transition-colors duration-500 cursor-pointer ${selectedQuad === 'technocrats' ? 'bg-neon-blue/5' : 'hover:bg-white/5'}`}
+                        onClick={() => setSelectedQuad('technocrats')}
+                    />
+                    <div
+                        className={`border-r border-white/5 transition-colors duration-500 cursor-pointer ${selectedQuad === 'proletariat' ? 'bg-gray-500/5' : 'hover:bg-white/5'}`}
+                        onClick={() => setSelectedQuad('proletariat')}
+                    />
+                    <div
+                        className={`transition-colors duration-500 cursor-pointer ${selectedQuad === 'merchants' ? 'bg-rose-500/5' : 'hover:bg-white/5'}`}
+                        onClick={() => setSelectedQuad('merchants')}
+                    />
+                </div>
 
-        {/* Center Origin */}
-        <div className="absolute top-1/2 left-1/2 w-full h-px bg-white/10 -translate-y-1/2 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 w-px h-full bg-white/10 -translate-x-1/2 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_10px_white] z-10" />
+                {/* Axes Labels */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">High Volume</div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">Low Volume</div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-90 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">High Cultural</div>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-[10px] font-mono uppercase text-gray-500 tracking-widest bg-void px-2">High Economic</div>
 
-        {/* Nodes */}
-        <div className="absolute inset-0 overflow-hidden">
-            {NODES.map((node) => {
-                // Convert coordinates (-100 to 100) to percentage (0 to 100)
-                const left = 50 + (node.x / 2); // e.g. -50 becomes 25%
-                const top = 50 - (node.y / 2); // e.g. 50 becomes 25%
-                
-                const isHovered = hoveredNode === node.id;
-                const isDimmed = hoveredNode !== null && !isHovered;
-                const isQuadActive = selectedQuad === node.q;
+                {/* Center Origin */}
+                <div className="absolute top-1/2 left-1/2 w-full h-px bg-white/10 -translate-y-1/2 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 w-px h-full bg-white/10 -translate-x-1/2 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_10px_white] z-10" />
 
-                return (
-                    <motion.div
-                        key={node.id}
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: isDimmed ? 0.3 : 1 }}
-                        className="absolute w-0 h-0 flex items-center justify-center cursor-pointer z-20"
-                        style={{ left: `${left}%`, top: `${top}%` }}
-                        onMouseEnter={() => setHoveredNode(node.id)}
-                        onMouseLeave={() => setHoveredNode(null)}
-                        onClick={(e) => { e.stopPropagation(); setSelectedQuad(node.q as Quadrant); }}
-                    >
-                        <div className={`relative flex items-center justify-center group`}>
-                            {/* Pulse Effect */}
-                            {isQuadActive && (
-                                <div className={`absolute w-12 h-12 rounded-full border opacity-20 animate-ping ${
-                                    node.q === 'aristocracy' ? 'border-emerald-500' :
-                                    node.q === 'technocrats' ? 'border-neon-blue' :
-                                    node.q === 'merchants' ? 'border-rose-500' : 'border-gray-500'
-                                }`} />
-                            )}
-                            
-                            {/* Dot */}
-                            <div className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
-                                isHovered || isQuadActive ? 'scale-150 bg-white border-transparent' : 
-                                node.q === 'aristocracy' ? 'bg-void border-emerald-500' :
-                                node.q === 'technocrats' ? 'bg-void border-neon-blue' :
-                                node.q === 'merchants' ? 'bg-void border-rose-500' : 'bg-void border-gray-500'
-                            }`} />
+                {/* Nodes */}
+                <div className="absolute inset-0 overflow-hidden">
+                    {NODES.map((node) => {
+                        // Convert coordinates (-100 to 100) to percentage (0 to 100)
+                        const left = 50 + (node.x / 2); // e.g. -50 becomes 25%
+                        const top = 50 - (node.y / 2); // e.g. 50 becomes 25%
 
-                            {/* Label */}
-                            <div className={`absolute left-5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2 py-1 bg-panel border border-white/10 rounded text-xs font-mono transition-all duration-300 ${
-                                isHovered || isQuadActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'
-                            }`}>
-                                {node.label}
-                            </div>
-                        </div>
-                    </motion.div>
-                );
-            })}
-        </div>
+                        const isHovered = hoveredNode === node.id;
+                        const isDimmed = hoveredNode !== null && !isHovered;
+                        const isQuadActive = selectedQuad === node.q;
 
-        {/* Scan Line Animation */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent h-[10%] w-full animate-[scan_4s_linear_infinite] pointer-events-none" />
+                        return (
+                            <motion.div
+                                key={node.id}
+                                initial={{ scale: 0, opacity: 0 }}
+                                animate={{ scale: 1, opacity: isDimmed ? 0.3 : 1 }}
+                                className="absolute w-0 h-0 flex items-center justify-center cursor-pointer z-20"
+                                style={{ left: `${left}%`, top: `${top}%` }}
+                                onMouseEnter={() => setHoveredNode(node.id)}
+                                onMouseLeave={() => setHoveredNode(null)}
+                                onClick={(e) => { e.stopPropagation(); setSelectedQuad(node.q as Quadrant); }}
+                            >
+                                <div className={`relative flex items-center justify-center group`}>
+                                    {/* Pulse Effect */}
+                                    {isQuadActive && (
+                                        <div className={`absolute w-12 h-12 rounded-full border opacity-20 animate-ping ${
+                                            node.q === 'aristocracy' ? 'border-emerald-500' :
+                                            node.q === 'technocrats' ? 'border-neon-blue' :
+                                            node.q === 'merchants' ? 'border-rose-500' : 'border-gray-500'
+                                        }`} />
+                                    )}
 
+                                    {/* Dot */}
+                                    <div className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${
+                                        isHovered || isQuadActive ? 'scale-150 bg-white border-transparent' :
+                                        node.q === 'aristocracy' ? 'bg-void border-emerald-500' :
+                                        node.q === 'technocrats' ? 'bg-void border-neon-blue' :
+                                        node.q === 'merchants' ? 'bg-void border-rose-500' : 'bg-void border-gray-500'
+                                    }`} />
+
+                                    {/* Label */}
+                                    <div className={`absolute left-5 top-1/2 -translate-y-1/2 whitespace-nowrap px-2 py-1 bg-panel border border-white/10 rounded text-xs font-mono transition-all duration-300 ${
+                                        isHovered || isQuadActive ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'
+                                    }`}>
+                                        {node.label}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+
+                {/* Scan Line Animation */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent h-[10%] w-full animate-[scan_4s_linear_infinite] pointer-events-none" />
+            </div>
+        )}
       </div>
 
       {/* --- INFO PANEL --- */}
