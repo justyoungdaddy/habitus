@@ -67,7 +67,7 @@ const App: React.FC = () => {
       <main className="pt-24 pb-20 w-full">
         {view === View.MANIFESTO && <ManifestoReader />}
         
-        {view === View.EXPLORER && (
+        {view === View.MAP && (
             <div className="animate-in fade-in zoom-in-95 duration-700 w-full px-4 md:px-8">
                  <FieldExplorer />
             </div>
