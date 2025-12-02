@@ -1,7 +1,9 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Points, PointMaterial, Line, Float, Stars } from '@react-three/drei';
+import { Points, PointMaterial, Line, Float, Stars, Sphere, Box } from '@react-three/drei';
 import * as THREE from 'three';
+import { useAppStore } from '../store';
+import { VisualTheme } from '../types';
 
 // --- Error Boundary for WebGL ---
 class ErrorBoundary extends React.Component<{ fallback: React.ReactNode, children: React.ReactNode }, { hasError: boolean }> {
@@ -98,16 +100,101 @@ const DigitalDust = () => {
   );
 };
 
+const MemphisBlobs = () => {
+    return (
+        <group>
+            <Float speed={2} rotationIntensity={1} floatIntensity={1}>
+                <Sphere args={[1, 32, 32]} position={[-2, 1, -5]}>
+                    <meshStandardMaterial color="#A855F7" roughness={0.4} />
+                </Sphere>
+            </Float>
+            <Float speed={1.5} rotationIntensity={0.5} floatIntensity={2}>
+                <Sphere args={[1.5, 32, 32]} position={[3, -1, -8]}>
+                    <meshStandardMaterial color="#3B82F6" roughness={0.4} />
+                </Sphere>
+            </Float>
+            <Float speed={1} rotationIntensity={2} floatIntensity={1}>
+                <Box args={[1, 1, 1]} position={[0, 2, -4]} rotation={[0.5, 0.5, 0]}>
+                    <meshStandardMaterial color="#EC4899" roughness={0.4} />
+                </Box>
+            </Float>
+             <ambientLight intensity={0.8} />
+             <directionalLight position={[10, 10, 5]} intensity={1} />
+        </group>
+    )
+}
+
+const BrutalistGrid = () => {
+    return (
+        <group>
+             <gridHelper args={[20, 20, 0xffffff, 0x333333]} position={[0, -2, 0]} />
+             <Float speed={5} rotationIntensity={0} floatIntensity={0}>
+                {Array.from({ length: 10 }).map((_, i) => (
+                    <Box key={i} args={[0.1, Math.random() * 4, 0.1]} position={[(Math.random() - 0.5) * 10, 0, (Math.random() - 0.5) * 10]}>
+                        <meshBasicMaterial color="white" wireframe />
+                    </Box>
+                ))}
+             </Float>
+        </group>
+    )
+}
+
+const FounderMode = () => {
+    const ref = useRef<THREE.Group>(null);
+    useFrame((state) => {
+        if(ref.current) {
+            ref.current.rotation.y += 0.01;
+        }
+    })
+    return (
+        <group ref={ref}>
+            <Stars radius={30} depth={50} count={2000} factor={6} saturation={1} fade speed={3} />
+            <ambientLight intensity={2} />
+             <PointMaterial
+                transparent
+                color="#F59E0B"
+                size={0.1}
+                sizeAttenuation={true}
+                depthWrite={false}
+                opacity={0.8}
+            />
+        </group>
+    )
+}
+
 const SceneContent = () => {
+    const theme = useAppStore(s => s.theme);
+
     return (
         <>
             <fog attach="fog" args={['#050505', 5, 20]} />
-            <ambientLight intensity={0.5} />
-            <DigitalDust />
-            <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
-                <NetworkLines />
-            </Float>
-            <Stars radius={50} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
+
+            {theme === 'default' && (
+                <>
+                    <ambientLight intensity={0.5} />
+                    <DigitalDust />
+                    <Float speed={1} rotationIntensity={0.5} floatIntensity={0.5}>
+                        <NetworkLines />
+                    </Float>
+                    <Stars radius={50} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
+                </>
+            )}
+
+            {theme === 'memphis' && <MemphisBlobs />}
+
+            {theme === 'brutalist' && <BrutalistGrid />}
+
+            {theme === 'founder' && <FounderMode />}
+
+            {theme === 'bento' && (
+                 <>
+                    <ambientLight intensity={0.8} />
+                    <gridHelper args={[30, 30, 0x222222, 0x111111]} rotation={[Math.PI/2, 0, 0]} position={[0,0,-5]} />
+                    <Float speed={0.5} rotationIntensity={0.2} floatIntensity={0.2}>
+                         <NetworkLines />
+                    </Float>
+                 </>
+            )}
         </>
     );
 };
