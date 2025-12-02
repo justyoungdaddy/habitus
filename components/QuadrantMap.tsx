@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Quadrant, QuadrantData } from '../types';
 import { Info, Users, TrendingUp, Gem, X, Target, Crosshair, Box, Globe } from 'lucide-react';
 import SocialGraph3D from './SocialGraph3D';
-import LiveTicker from './LiveTicker';
 
 // --- DATA ---
 const QUADRANTS: QuadrantData[] = [
@@ -100,10 +99,7 @@ const QuadrantMap: React.FC = () => {
         </div>
 
         {viewMode === '3D' ? (
-            <>
-                <SocialGraph3D />
-                <LiveTicker />
-            </>
+            <SocialGraph3D />
         ) : (
             <div className="relative w-full h-full">
                 {/* Grid Background */}
