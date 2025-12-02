@@ -134,7 +134,13 @@ const ThreeScene: React.FC = () => {
 
   // Render static background immediately if WebGL is unavailable
   if (isWebGLAvailable === false) {
-    return <div className="absolute inset-0 -z-10 bg-void" />;
+    return (
+      <div className="absolute inset-0 -z-10 bg-void overflow-hidden pointer-events-none">
+         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-void/50 to-void z-10" />
+         {/* Simple static visual as fallback */}
+         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neon-blue/5 via-void to-void" />
+      </div>
+    );
   }
 
   // Render static background while checking
@@ -145,11 +151,20 @@ const ThreeScene: React.FC = () => {
   return (
     <div className="absolute inset-0 -z-10 bg-void overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-void/50 to-void z-10" />
-        <ErrorBoundary fallback={<div className="bg-void w-full h-full" />}>
+        <ErrorBoundary fallback={<div className="bg-void w-full h-full"><div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neon-blue/5 via-void to-void" /></div>}>
             <Canvas 
                 camera={{ position: [0, 0, 10], fov: 50 }}
                 gl={{ antialias: true, alpha: true, failIfMajorPerformanceCaveat: false }}
                 dpr={[1, 1.5]}
+                onCreated={({ gl }) => {
+                   gl.domElement.addEventListener('webglcontextlost', (event) => {
+                      event.preventDefault();
+                      console.warn('WebGL Context Lost');
+                   }, false);
+                   gl.domElement.addEventListener('webglcontextrestored', () => {
+                      console.log('WebGL Context Restored');
+                   }, false);
+                }}
             >
                 <SceneContent />
             </Canvas>
