@@ -1,22 +1,52 @@
 import React, { useState } from 'react';
 import ThreeScene from './components/ThreeScene';
 import ManifestoReader from './components/ManifestoReader';
-import QuadrantMap from './components/QuadrantMap';
+import FieldExplorer from './components/FieldExplorer';
 import StackAnalyzer from './components/StackAnalyzer';
-import { MousePointer2, Box, Layers } from 'lucide-react';
+import EntranceExam from './components/EntranceExam';
+import TheField from './components/TheField';
+import { MousePointer2, Box, Layers, LogOut } from 'lucide-react';
 
 enum View {
+  EXAM,
+  FIELD,
   MANIFESTO,
-  MAP,
+  EXPLORER,
   SCANNER
 }
 
 const App: React.FC = () => {
-  const [view, setView] = useState<View>(View.MANIFESTO);
+  const [view, setView] = useState<View>(View.EXAM);
+  const [userCoords, setUserCoords] = useState({ x: 0, y: 0 });
 
+  const handleExamComplete = (coords: { x: number, y: number }) => {
+      setUserCoords(coords);
+      setView(View.FIELD);
+  };
+
+  // If in immersive field mode, render it full screen without standard layout
+  if (view === View.FIELD) {
+      return (
+          <div className="relative w-full h-screen">
+              <TheField startCoordinates={userCoords} />
+              <button
+                onClick={() => setView(View.MANIFESTO)}
+                className="absolute top-6 left-6 z-50 px-4 py-2 bg-black/50 border border-white/10 rounded hover:bg-white/10 text-white font-mono text-xs flex items-center gap-2"
+              >
+                  <LogOut className="w-3 h-3" /> EXIT SIMULATION
+              </button>
+          </div>
+      )
+  }
+
+  // Standard Layout
   return (
     <div className="min-h-screen relative text-gray-200 selection:bg-neon-blue/30 selection:text-white overflow-x-hidden">
-      {/* 3D Background */}
+
+      {/* Overlay Exam */}
+      {view === View.EXAM && <EntranceExam onComplete={handleExamComplete} />}
+
+      {/* 3D Background (only if not in EXAM to prevent conflict, though EXAM covers it) */}
       <ThreeScene />
       
       {/* Navigation Header */}
@@ -28,7 +58,7 @@ const App: React.FC = () => {
         
         <nav className="flex gap-1 p-1 bg-white/5 rounded-full border border-white/10">
             <NavBtn active={view === View.MANIFESTO} onClick={() => setView(View.MANIFESTO)}>Manifesto</NavBtn>
-            <NavBtn active={view === View.MAP} onClick={() => setView(View.MAP)}>The Field</NavBtn>
+            <NavBtn active={view === View.EXPLORER} onClick={() => setView(View.EXPLORER)}>The Map</NavBtn>
             <NavBtn active={view === View.SCANNER} onClick={() => setView(View.SCANNER)}>Scanner</NavBtn>
         </nav>
       </header>
@@ -37,13 +67,9 @@ const App: React.FC = () => {
       <main className="pt-24 pb-20 w-full">
         {view === View.MANIFESTO && <ManifestoReader />}
         
-        {view === View.MAP && (
-            <div className="animate-in fade-in zoom-in-95 duration-700 w-full">
-                <div className="text-center mb-6 px-4">
-                    <h2 className="text-3xl md:text-4xl font-serif text-white mb-2">The Social Graph</h2>
-                    <p className="text-gray-400 font-mono text-[10px] uppercase tracking-[0.2em]">Live Coordinates of Distinction</p>
-                </div>
-                <QuadrantMap />
+        {view === View.EXPLORER && (
+            <div className="animate-in fade-in zoom-in-95 duration-700 w-full px-4 md:px-8">
+                 <FieldExplorer />
             </div>
         )}
 
