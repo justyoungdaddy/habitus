@@ -30,9 +30,11 @@ export interface AnalysisResult {
 }
 
 export const TOOLS_OPTIONS = {
-  designTool: ['Figma', 'Canva', 'Adobe XD', 'MS Paint', 'Sketch'],
-  browser: ['Arc', 'Chrome', 'Edge', 'Brave', 'Safari'],
-  projectManagement: ['Linear', 'Jira', 'Trello', 'Notion', 'Excel'],
-  knowledgeBase: ['Obsidian', 'Notion', 'Confluence', 'Google Docs', 'Apple Notes'],
-  communication: ['Discord', 'Slack', 'Teams', 'Signal', 'Email'],
+  designTool: ['Figma', 'Canva', 'Adobe XD', 'MS Paint', 'Sketch', 'Pen & Paper', 'CSS/HTML'],
+  browser: ['Arc', 'Chrome', 'Edge', 'Brave', 'Safari', 'Firefox', 'Tor'],
+  projectManagement: ['Linear', 'Jira', 'Trello', 'Notion', 'Excel', 'Basecamp', 'Monday.com'],
+  knowledgeBase: ['Obsidian', 'Notion', 'Confluence', 'Google Docs', 'Apple Notes', 'Roam Research', 'Substack'],
+  communication: ['Discord', 'Slack', 'Teams', 'Signal', 'Email', 'WhatsApp', 'Zoom'],
 };
+
+export type VisualTheme = 'default' | 'memphis' | 'brutalist' | 'founder' | 'bento';
