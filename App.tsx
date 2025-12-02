@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ThreeScene from './components/ThreeScene';
 import ManifestoReader from './components/ManifestoReader';
-import QuadrantMap from './components/QuadrantMap';
+import FieldExplorer from './components/FieldExplorer';
 import StackAnalyzer from './components/StackAnalyzer';
 import { MousePointer2, Box, Layers } from 'lucide-react';
 
@@ -38,12 +38,8 @@ const App: React.FC = () => {
         {view === View.MANIFESTO && <ManifestoReader />}
         
         {view === View.MAP && (
-            <div className="animate-in fade-in zoom-in-95 duration-700 w-full">
-                <div className="text-center mb-6 px-4">
-                    <h2 className="text-3xl md:text-4xl font-serif text-white mb-2">The Social Graph</h2>
-                    <p className="text-gray-400 font-mono text-[10px] uppercase tracking-[0.2em]">Live Coordinates of Distinction</p>
-                </div>
-                <QuadrantMap />
+            <div className="animate-in fade-in zoom-in-95 duration-700 w-full px-4 md:px-8">
+                 <FieldExplorer />
             </div>
         )}
 
