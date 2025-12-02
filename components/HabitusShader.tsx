@@ -1,5 +1,6 @@
 import { shaderMaterial } from '@react-three/drei';
 import * as THREE from 'three';
+import { extend } from '@react-three/fiber';
 
 const HabitusShaderMaterial = shaderMaterial(
   {
@@ -66,5 +67,15 @@ const HabitusShaderMaterial = shaderMaterial(
     }
   `
 );
+
+extend({ HabitusShaderMaterial });
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      habitusShaderMaterial: any;
+    }
+  }
+}
 
 export { HabitusShaderMaterial };

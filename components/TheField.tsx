@@ -1,21 +1,9 @@
 import React, { useRef, useMemo, useState } from 'react';
-import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Stars, Float, Text, InstancedMeshProps, Cloud } from '@react-three/drei';
 import * as THREE from 'three';
 import { EffectComposer, Bloom, Noise, Vignette, Glitch } from '@react-three/postprocessing';
 import { HabitusShaderMaterial } from './HabitusShader';
-
-// Register the custom shader material with R3F
-extend({ HabitusShaderMaterial });
-
-// Add type definition for the custom element
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      habitusShaderMaterial: any;
-    }
-  }
-}
 
 // --- DATA & TYPES ---
 const LURKER_COUNT = 2000;
@@ -71,7 +59,7 @@ const TheVoid = () => {
 const TheFactory = () => {
     return (
         <group position={[100, 50, 0]}>
-            <Text position={[0, 40, 0]} fontSize={10} color="#F43F5E">
+            <Text position={[0, 40, 0]} fontSize={10} color="#F43F5E" font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff">
                 THE FACTORY
             </Text>
             {Array.from({ length: FACTORY_COUNT }).map((_, i) => (
@@ -99,7 +87,7 @@ const TheFactory = () => {
 const TheStudio = () => {
     return (
         <group position={[-100, 50, 0]}>
-             <Text position={[0, 40, 0]} fontSize={10} color="#10B981">
+             <Text position={[0, 40, 0]} fontSize={10} color="#10B981" font="https://fonts.gstatic.com/s/jetbrainsmono/v18/tDbY2o-flEEny0FZhsfKu5WU4zr3E_BX0PnF8RD8yKxTOlOV.woff">
                 THE STUDIO
             </Text>
             {Array.from({ length: STUDIO_COUNT }).map((_, i) => (
@@ -127,7 +115,7 @@ const TheStudio = () => {
 const TheZenith = () => {
     return (
         <group position={[0, 200, 0]}>
-             <Text position={[0, 60, 0]} fontSize={15} color="#A855F7">
+             <Text position={[0, 60, 0]} fontSize={15} color="#A855F7" font="https://fonts.gstatic.com/s/playfairdisplay/v30/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvXDXbtM.woff">
                 THE ZENITH
             </Text>
             <Float speed={0.5} rotationIntensity={0.1} floatIntensity={0.5}>
